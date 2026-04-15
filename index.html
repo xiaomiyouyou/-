@@ -1,1149 +1,803 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>自动化立体仓库参观介绍 | Automated Warehouse Tour</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动立体仓库介绍 | Automated Warehouse Tour</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         :root {
-            --primary: #1e40af;
-            --primary-light: #3b82f6;
-            --secondary: #0ea5e9;
-            --accent: #06b6d4;
-            --bg: #f0f9ff;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --bg: #f8fafc;
             --card: #ffffff;
-            --text: #0f172a;
-            --text-light: #475569;
+            --text: #1e293b;
+            --text-light: #64748b;
             --border: #e2e8f0;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --video-bg: #1e293b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: var(--bg);
-            -webkit-font-smoothing: antialiased;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
         }
-        
-        /* 语言选择页 */
-        .lang-select {
+
+        /* 语言选择页面 */
+        .language-selector {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            padding: 40px 20px;
-            position: relative;
-            overflow: hidden;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        
-        .lang-select::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 2px, transparent 2px);
-            background-size: 30px 30px;
-            opacity: 0.3;
-            animation: flow 20s linear infinite;
-        }
-        
-        @keyframes flow {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(30px, 30px); }
-        }
-        
-        .logo-area {
-            text-align: center;
-            margin-bottom: 50px;
-            z-index: 1;
-        }
-        
-        .logo {
-            width: 100px;
-            height: 100px;
-            background: rgba(255,255,255,0.15);
+
+        .selector-container {
+            background: var(--card);
             border-radius: 24px;
-            margin: 0 auto 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.3);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        
-        .lang-select h1 {
-            color: white;
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
+            padding: 48px 32px;
+            box-shadow: var(--shadow-lg);
             text-align: center;
-            z-index: 1;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        .lang-select .subtitle {
-            color: rgba(255,255,255,0.85);
-            font-size: 18px;
-            font-weight: 300;
-            margin-bottom: 50px;
-            z-index: 1;
-        }
-        
-        .lang-buttons {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
             max-width: 400px;
-            z-index: 1;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
         }
-        
-        .lang-btn {
-            flex: 1;
-            min-width: 140px;
-            padding: 20px 32px;
-            font-size: 18px;
-            font-weight: 600;
-            border: 2px solid rgba(255,255,255,0.4);
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .lang-btn:hover {
-            background: white;
-            color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            border-color: white;
-        }
-        
-        .lang-btn .flag {
-            font-size: 24px;
-        }
-        
-        /* 内容页 */
-        .content-page {
-            display: none;
-            background: var(--bg);
-            min-height: 100vh;
-            padding-bottom: 40px;
-        }
-        
-        .content-page.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* 顶部导航 */
-        .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
             color: white;
-            padding: 16px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(30, 64, 175, 0.3);
+            font-size: 36px;
         }
-        
-        .header-content {
-            max-width: 900px;
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .lang-btn {
+            display: block;
+            width: 100%;
+            padding: 16px 24px;
+            margin: 12px 0;
+            border: 2px solid var(--border);
+            background: var(--card);
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .lang-btn:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .lang-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .lang-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* 主内容页面 */
+        .main-content {
+            display: none;
+            max-width: 800px;
             margin: 0 auto;
+            padding: 20px;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .header {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: var(--border);
+        }
+
+        .lang-indicator {
+            padding: 6px 12px;
+            background: #dbeafe;
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: var(--text);
+        }
+
+        .section {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .section-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        
-        .back-btn {
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.15);
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            white-space: nowrap;
-        }
-        
-        .back-btn:hover {
-            background: rgba(255,255,255,0.25);
-        }
-        
-        .header h1 {
-            font-size: 17px;
-            font-weight: 600;
-            flex: 1;
-            text-align: center;
-            margin: 0 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .lang-indicator {
-            font-size: 12px;
-            padding: 6px 14px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            white-space: nowrap;
-        }
-        
-        /* 内容容器 */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        /* 视频容器 */
-        .video-container {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: var(--video-bg);
-            border-radius: 16px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+
+        .section-title {
             font-size: 18px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .video-placeholder {
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .video-placeholder .icon {
-            font-size: 64px;
-            margin-bottom: 15px;
-            opacity: 0.8;
-        }
-        
-        .video-placeholder p {
-            font-size: 16px;
-            opacity: 0.7;
-            margin-bottom: 8px;
-        }
-        
-        .video-placeholder .hint {
-            font-size: 13px;
-            opacity: 0.5;
-        }
-        
-        .video-tag {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
             font-weight: 600;
+            color: var(--text);
         }
-        
-        /* 介绍卡片 */
-        .intro-card {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-        
-        .intro-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        
-        .intro-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 18px;
-        }
-        
-        .intro-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
-            border-radius: 12px;
+
+        .section-number {
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 12px;
+        }
+
+        .section-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .play-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .faq-section {
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 2px solid var(--border);
+        }
+
+        .faq-title {
             font-size: 20px;
             font-weight: 700;
-            flex-shrink: 0;
-        }
-        
-        .intro-title {
-            flex: 1;
-        }
-        
-        .intro-title h2 {
-            font-size: 20px;
-            color: var(--text);
-            margin-bottom: 6px;
-            line-height: 1.3;
-        }
-        
-        .intro-title .en-title {
-            font-size: 13px;
-            color: var(--text-light);
-            font-weight: 400;
-            line-height: 1.4;
-        }
-        
-        /* FAQ区域 */
-        .faq-section {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
-        }
-        
-        .faq-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--border);
-        }
-        
-        .faq-icon-main {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--warning) 0%, #ef4444 100%);
-            border-radius: 12px;
+            color: var(--text);
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 22px;
-            flex-shrink: 0;
+            gap: 8px;
         }
-        
-        .faq-header h2 {
-            font-size: 20px;
-            color: var(--text);
-        }
-        
-        .faq-header .en-title {
-            font-size: 13px;
-            color: var(--text-light);
-            font-weight: 400;
-        }
-        
+
         .faq-item {
-            margin-bottom: 10px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-        
-        .faq-item:hover {
-            border-color: var(--primary-light);
-            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.1);
-        }
-        
-        .faq-question {
-            padding: 18px 20px;
-            background: var(--bg);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 500;
-            color: var(--text);
-            transition: all 0.3s;
-            user-select: none;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-        
-        .faq-question:hover {
-            background: #e0f2fe;
-        }
-        
-        .faq-question.active {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 100%);
-            color: white;
-        }
-        
-        .faq-toggle {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s;
-            font-size: 12px;
-            flex-shrink: 0;
-        }
-        
-        .faq-toggle.active {
-            transform: rotate(180deg);
-        }
-        
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-            background: white;
-        }
-        
-        .faq-answer.active {
-            max-height: 600px;
-            padding: 20px;
-        }
-        
-        .faq-answer p {
-            color: var(--text-light);
-            line-height: 1.8;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        
-        .faq-answer p:last-child {
-            margin-bottom: 0;
-        }
-        
-        /* 底部 */
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            padding: 30px;
             background: var(--card);
-            border-radius: 16px;
-            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
         }
-        
-        .footer p {
-            color: var(--text-light);
-            font-size: 14px;
-            margin-bottom: 8px;
+
+        .faq-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
         }
-        
-        .footer .brand {
-            font-size: 16px;
+
+        .faq-question {
             font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+            font-size: 15px;
+        }
+
+        .faq-label {
+            font-size: 12px;
             color: var(--primary);
-            margin-top: 10px;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
-        
-        /* 响应式 */
-        @media (max-width: 600px) {
-            .lang-select h1 {
-                font-size: 26px;
-            }
-            
-            .lang-btn {
-                min-width: 120px;
-                padding: 18px 24px;
-                font-size: 16px;
-            }
-            
-            .intro-card, .faq-section {
-                padding: 20px;
-            }
-            
-            .header h1 {
-                font-size: 15px;
-            }
-            
-            .faq-question {
-                font-size: 14px;
-                padding: 16px;
-            }
-            
-            .video-container {
-                aspect-ratio: 4/3;
-            }
-        }
-        
-        /* 加载动画 */
-        .loading {
+
+        .video-modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: white;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 900px;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .close-video {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 1001;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.3s;
         }
-        
-        .loading.hide {
-            opacity: 0;
-            pointer-events: none;
+
+        .close-video:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
         }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        .video-placeholder {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .video-placeholder-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .video-placeholder-text {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+
+        .video-path {
+            font-size: 12px;
+            opacity: 0.5;
+            margin-top: 8px;
+            font-family: monospace;
+        }
+
+        @media (max-width: 640px) {
+            .selector-container {
+                padding: 32px 24px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .section-title {
+                font-size: 16px;
+            }
+            
+            .faq-question {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- 加载动画 -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-    </div>
-
-    <!-- 语言选择页 -->
-    <div class="lang-select" id="langSelect">
-        <div class="logo-area">
-            <div class="logo">🏭</div>
-            <h1>智能仓储参观导览</h1>
-            <p class="subtitle">Smart Warehouse Tour Guide</p>
-        </div>
-        
-        <div class="lang-buttons">
-            <button class="lang-btn" onclick="selectLang('zh')">
-                <span class="flag">🇨🇳</span>中文参观
+    <!-- 语言选择界面 -->
+    <div id="languageSelector" class="language-selector">
+        <div class="selector-container">
+            <div class="icon">🏭</div>
+            <h1>自动立体仓库</h1>
+            <p class="subtitle">Automated Shuttle Warehouse Tour</p>
+            
+            <button class="lang-btn primary" onclick="selectLanguage('zh')">
+                🇨🇳 中文介绍
             </button>
-            <button class="lang-btn" onclick="selectLang('en')">
-                <span class="flag">🇺🇸</span>English Tour
+            <button class="lang-btn" onclick="selectLanguage('en')">
+                🇺🇸 English Version
             </button>
+            
+            <p style="margin-top: 24px; font-size: 12px; color: var(--text-light);">
+                请扫描二维码或点击上方选择语言<br>
+                Please scan QR code or select language above
+            </p>
         </div>
     </div>
 
-    <!-- 中文内容页 -->
-    <div class="content-page" id="zhPage">
+    <!-- 中文内容 -->
+    <div id="zhContent" class="main-content">
         <div class="header">
-            <div class="header-content">
-                <button class="back-btn" onclick="goBack()">
-                    ← 返回
-                </button>
-                <h1>自动化立体仓库参观介绍</h1>
+            <div class="header-top">
+                <button class="back-btn" onclick="backToLanguage()">← 返回语言选择</button>
                 <span class="lang-indicator">中文</span>
             </div>
+            <h2>🏭 自动立体仓库参观介绍</h2>
         </div>
-        
-        <div class="container">
-            <!-- Part 1 自动立体仓库基本信息 -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part1">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 1 视频区域</p>
-                        <p class="hint">自动立体仓库基本信息</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
+
+        <div class="section" onclick="openVideo('part1')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">01</div>
+                    <div class="section-title">自动立体仓库基本信息</div>
                 </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">1</div>
-                    <div class="intro-title">
-                        <h2>自动立体仓库基本信息</h2>
-                        <div class="en-title">Basic Information of the Automated Shuttle Warehouse</div>
-                    </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part2')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">02</div>
+                    <div class="section-title">自动化设备系统</div>
                 </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part3')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">03</div>
+                    <div class="section-title">仓储能力</div>
+                </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part4')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">04</div>
+                    <div class="section-title">运行效率</div>
+                </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part5')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">05</div>
+                    <div class="section-title">AGV 自动运输系统</div>
+                </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part6')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">06</div>
+                    <div class="section-title">智能数据与物流可视化管理</div>
+                </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <div class="faq-title">
+                <span>❓</span>
+                <span>常见问题解答</span>
             </div>
             
-            <!-- Part 2 自动化设备系统 -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part2">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 2 视频区域</p>
-                        <p class="hint">自动化设备系统</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">2</div>
-                    <div class="intro-title">
-                        <h2>自动化设备系统</h2>
-                        <div class="en-title">Automated Equipment System</div>
-                    </div>
-                </div>
+            <div class="faq-item" onclick="openVideo('q1')">
+                <div class="faq-label">Q1</div>
+                <div class="faq-question">为什么选择建设自动立体库？</div>
             </div>
-            
-            <!-- Part 3 仓储能力 -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part3">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 3 视频区域</p>
-                        <p class="hint">仓储能力</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">3</div>
-                    <div class="intro-title">
-                        <h2>仓储能力</h2>
-                        <div class="en-title">Storage Capability</div>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q2')">
+                <div class="faq-label">Q2</div>
+                <div class="faq-question">立体库的存储利用率是多少？</div>
             </div>
-            
-            <!-- Part 4 运行效率 -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part4">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 4 视频区域</p>
-                        <p class="hint">运行效率</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">4</div>
-                    <div class="intro-title">
-                        <h2>运行效率</h2>
-                        <div class="en-title">System Throughput & Efficiency</div>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q3')">
+                <div class="faq-label">Q3</div>
+                <div class="faq-question">立体库每小时可以处理多少托盘？</div>
             </div>
-            
-            <!-- Part 5 AGV自动运输系统 -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part5">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 5 视频区域</p>
-                        <p class="hint">AGV 自动运输系统</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">5</div>
-                    <div class="intro-title">
-                        <h2>AGV 自动运输系统</h2>
-                        <div class="en-title">AGV Automated Transportation System</div>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q4')">
+                <div class="faq-label">Q4</div>
+                <div class="faq-question">AGV 在工厂内部主要承担哪些任务？</div>
             </div>
-            
-            <!-- Part 6 智能数据与物流可视化管理 -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part6">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 6 视频区域</p>
-                        <p class="hint">智能数据与物流可视化管理</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">6</div>
-                    <div class="intro-title">
-                        <h2>智能数据与物流可视化管理</h2>
-                        <div class="en-title">Smart Data & Logistics Visibility</div>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q5')">
+                <div class="faq-label">Q5</div>
+                <div class="faq-question">AGV 如何避免交通冲突或拥堵？</div>
             </div>
-            
-            <!-- Part 7 常见问题 -->
-            <div class="faq-section">
-                <div class="intro-header" style="margin-bottom: 20px;">
-                    <div class="intro-icon" style="background: linear-gradient(135deg, var(--warning) 0%, #ef4444 100%);">7</div>
-                    <div class="intro-title">
-                        <h2>常见问题</h2>
-                        <div class="en-title">Frequently Asked Questions</div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q1：为什么选择建设自动立体库？<br><small style="opacity:0.7;">Why choose to build an Automated Shuttle Warehouse</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q2：立体库的存储利用率是多少？<br><small style="opacity:0.7;">What is the storage utilization rate of an Automated Shuttle Warehouse?</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q3：立体库每小时可以处理多少托盘？<br><small style="opacity:0.7;">How many pallets can an Automated Shuttle Warehouse process per hour?</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q4：AGV 在工厂内部主要承担哪些任务？<br><small style="opacity:0.7;">What are the main tasks that AGVs perform inside factories</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q5：AGV 如何避免交通冲突或拥堵？<br><small style="opacity:0.7;">How do AGVs avoid traffic conflicts or congestion?</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q6：系统如何确保库存数据的准确性？<br><small style="opacity:0.7;">How does the system ensure inventory data accuracy?</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q7：如果系统设备出现故障，会影响生产吗？<br><small style="opacity:0.7;">Will production be affected if system equipment fails?</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q8：你们如何利用数据来优化物流系统？<br><small style="opacity:0.7;">How do you leverage data to optimize the logistics system?</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q9：自动化系统带来了哪些主要收益？<br><small style="opacity:0.7;">What are the main benefits brought by automation systems?</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q10：未来是否有进一步升级或扩展计划？<br><small style="opacity:0.7;">Are there any plans for future upgrades or expansion?</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>（等待视频内容补充）</p>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q6')">
+                <div class="faq-label">Q6</div>
+                <div class="faq-question">系统如何确保库存数据的准确性？</div>
             </div>
-            
-            <!-- 底部 -->
-            <div class="footer">
-                <p>感谢参观我们的自动化立体仓库</p>
-                <p>Thank you for visiting our Automated Warehouse</p>
-                <div class="brand">沈阳工厂智能物流中心</div>
+
+            <div class="faq-item" onclick="openVideo('q7')">
+                <div class="faq-label">Q7</div>
+                <div class="faq-question">如果系统设备出现故障，会影响生产吗？</div>
+            </div>
+
+            <div class="faq-item" onclick="openVideo('q8')">
+                <div class="faq-label">Q8</div>
+                <div class="faq-question">你们如何利用数据来优化物流系统？</div>
+            </div>
+
+            <div class="faq-item" onclick="openVideo('q9')">
+                <div class="faq-label">Q9</div>
+                <div class="faq-question">自动化系统带来了哪些主要收益？</div>
+            </div>
+
+            <div class="faq-item" onclick="openVideo('q10')">
+                <div class="faq-label">Q10</div>
+                <div class="faq-question">未来是否有进一步升级或扩展计划？</div>
             </div>
         </div>
     </div>
 
-    <!-- 英文内容页 -->
-    <div class="content-page" id="enPage">
+    <!-- 英文内容 -->
+    <div id="enContent" class="main-content">
         <div class="header">
-            <div class="header-content">
-                <button class="back-btn" onclick="goBack()">
-                    ← Back
-                </button>
-                <h1>Automated Warehouse Tour</h1>
-                <span class="lang-indicator">EN</span>
+            <div class="header-top">
+                <button class="back-btn" onclick="backToLanguage()">← Back to Language</button>
+                <span class="lang-indicator">English</span>
+            </div>
+            <h2>🏭 Automated Warehouse Tour</h2>
+        </div>
+
+        <div class="section" onclick="openVideo('part1_en')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">01</div>
+                    <div class="section-title">Basic Information of the Automated Shuttle Warehouse</div>
+                </div>
+                <div class="play-icon">▶</div>
             </div>
         </div>
-        
-        <div class="container">
-            <!-- Part 1 Basic Information -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part1-en">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 1 Video Area</p>
-                        <p class="hint">Basic Information</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
+
+        <div class="section" onclick="openVideo('part2_en')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">02</div>
+                    <div class="section-title">Automated Equipment System</div>
                 </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">1</div>
-                    <div class="intro-title">
-                        <h2>Basic Information</h2>
-                        <div class="en-title">Automated Shuttle Warehouse Overview</div>
-                    </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part3_en')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">03</div>
+                    <div class="section-title">Storage Capability</div>
                 </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part4_en')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">04</div>
+                    <div class="section-title">System Throughput & Efficiency</div>
+                </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part5_en')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">05</div>
+                    <div class="section-title">AGV Automated Transportation System</div>
+                </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="section" onclick="openVideo('part6_en')">
+            <div class="section-header">
+                <div class="section-left">
+                    <div class="section-number">06</div>
+                    <div class="section-title">Smart Data & Logistics Visibility</div>
+                </div>
+                <div class="play-icon">▶</div>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <div class="faq-title">
+                <span>❓</span>
+                <span>Frequently Asked Questions</span>
             </div>
             
-            <!-- Part 2 Automated Equipment System -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part2-en">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 2 Video Area</p>
-                        <p class="hint">Automated Equipment System</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">2</div>
-                    <div class="intro-title">
-                        <h2>Automated Equipment System</h2>
-                        <div class="en-title">WMS & WCS Integration</div>
-                    </div>
-                </div>
+            <div class="faq-item" onclick="openVideo('q1_en')">
+                <div class="faq-label">Q1</div>
+                <div class="faq-question">Why choose to build an Automated Shuttle Warehouse?</div>
             </div>
-            
-            <!-- Part 3 Storage Capability -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part3-en">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 3 Video Area</p>
-                        <p class="hint">Storage Capability</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">3</div>
-                    <div class="intro-title">
-                        <h2>Storage Capability</h2>
-                        <div class="en-title">Pallet Specifications & Capacity</div>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q2_en')">
+                <div class="faq-label">Q2</div>
+                <div class="faq-question">What is the storage utilization rate of an Automated Shuttle Warehouse?</div>
             </div>
-            
-            <!-- Part 4 System Throughput & Efficiency -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part4-en">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 4 Video Area</p>
-                        <p class="hint">System Throughput & Efficiency</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">4</div>
-                    <div class="intro-title">
-                        <h2>System Throughput & Efficiency</h2>
-                        <div class="en-title">Operational Performance Metrics</div>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q3_en')">
+                <div class="faq-label">Q3</div>
+                <div class="faq-question">How many pallets can an Automated Shuttle Warehouse process per hour?</div>
             </div>
-            
-            <!-- Part 5 AGV Automated Transportation System -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part5-en">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 5 Video Area</p>
-                        <p class="hint">AGV Automated Transportation System</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">5</div>
-                    <div class="intro-title">
-                        <h2>AGV Automated Transportation System</h2>
-                        <div class="en-title">Automated Guided Vehicles Fleet</div>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q4_en')">
+                <div class="faq-label">Q4</div>
+                <div class="faq-question">What are the main tasks that AGVs perform inside factories?</div>
             </div>
-            
-            <!-- Part 6 Smart Data & Logistics Visibility -->
-            <div class="intro-card">
-                <div class="video-container" id="video-part6-en">
-                    <div class="video-placeholder">
-                        <div class="icon">🎬</div>
-                        <p>Part 6 Video Area</p>
-                        <p class="hint">Smart Data & Logistics Visibility</p>
-                    </div>
-                    <span class="video-tag">VIDEO</span>
-                </div>
-                
-                <div class="intro-header">
-                    <div class="intro-icon">6</div>
-                    <div class="intro-title">
-                        <h2>Smart Data & Logistics Visibility</h2>
-                        <div class="en-title">Real-time Dashboard & Analytics</div>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q5_en')">
+                <div class="faq-label">Q5</div>
+                <div class="faq-question">How do AGVs avoid traffic conflicts or congestion?</div>
             </div>
-            
-            <!-- Part 7 FAQ -->
-            <div class="faq-section">
-                <div class="intro-header" style="margin-bottom: 20px;">
-                    <div class="intro-icon" style="background: linear-gradient(135deg, var(--warning) 0%, #ef4444 100%);">7</div>
-                    <div class="intro-title">
-                        <h2>Frequently Asked Questions</h2>
-                        <div class="en-title">Visitor Common Questions</div>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q1: Why choose to build an Automated Shuttle Warehouse?<br><small style="opacity:0.7;">为什么选择建设自动立体库？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q2: What is the storage utilization rate?<br><small style="opacity:0.7;">立体库的存储利用率是多少？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q3: How many pallets can be processed per hour?<br><small style="opacity:0.7;">立体库每小时可以处理多少托盘？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q4: What are the main tasks of AGVs?<br><small style="opacity:0.7;">AGV 在工厂内部主要承担哪些任务？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q5: How do AGVs avoid traffic conflicts?<br><small style="opacity:0.7;">AGV 如何避免交通冲突或拥堵？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q6: How does the system ensure inventory accuracy?<br><small style="opacity:0.7;">系统如何确保库存数据的准确性？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q7: Will production be affected by equipment failure?<br><small style="opacity:0.7;">如果系统设备出现故障，会影响生产吗？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q8: How to leverage data for optimization?<br><small style="opacity:0.7;">如何利用数据来优化物流系统？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q9: What are the main benefits?<br><small style="opacity:0.7;">自动化系统带来了哪些主要收益？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question" onclick="toggleFaq(this)">
-                        <span>Q10: Future upgrade plans?<br><small style="opacity:0.7;">未来是否有进一步升级或扩展计划？</small></span>
-                        <span class="faq-toggle">▼</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>(Video content pending)</p>
-                    </div>
-                </div>
+
+            <div class="faq-item" onclick="openVideo('q6_en')">
+                <div class="faq-label">Q6</div>
+                <div class="faq-question">How does the system ensure inventory data accuracy?</div>
             </div>
-            
-            <!-- Footer -->
-            <div class="footer">
-                <p>Thank you for visiting our Automated Warehouse</p>
-                <p>感谢参观我们的自动化立体仓库</p>
-                <div class="brand">Shenyang Plant Smart Logistics Center</div>
+
+            <div class="faq-item" onclick="openVideo('q7_en')">
+                <div class="faq-label">Q7</div>
+                <div class="faq-question">Will production be affected if system equipment fails?</div>
+            </div>
+
+            <div class="faq-item" onclick="openVideo('q8_en')">
+                <div class="faq-label">Q8</div>
+                <div class="faq-question">How do you leverage data to optimize the logistics system?</div>
+            </div>
+
+            <div class="faq-item" onclick="openVideo('q9_en')">
+                <div class="faq-label">Q9</div>
+                <div class="faq-question">What are the main benefits brought by automation systems?</div>
+            </div>
+
+            <div class="faq-item" onclick="openVideo('q10_en')">
+                <div class="faq-label">Q10</div>
+                <div class="faq-question">Are there any plans for future upgrades or expansion?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 视频播放模态框 -->
+    <div id="videoModal" class="video-modal" onclick="closeVideo(event)">
+        <div class="video-container" onclick="event.stopPropagation()">
+            <button class="close-video" onclick="closeVideo()">✕</button>
+            <div id="videoContent">
+                <!-- 视频内容将在这里动态插入 -->
             </div>
         </div>
     </div>
 
     <script>
-        // 页面加载完成后隐藏loading
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loading').classList.add('hide');
-            }, 300);
-        });
-        
+        // 视频路径配置 - 请根据你的GitHub存储路径修改
+        const videoPaths = {
+            // 中文视频路径
+            'part1': 'videos/zh/part1_basic_info.mp4',
+            'part2': 'videos/zh/part2_equipment.mp4',
+            'part3': 'videos/zh/part3_storage.mp4',
+            'part4': 'videos/zh/part4_efficiency.mp4',
+            'part5': 'videos/zh/part5_agv.mp4',
+            'part6': 'videos/zh/part6_data.mp4',
+            'q1': 'videos/zh/q1_why_automated.mp4',
+            'q2': 'videos/zh/q2_utilization.mp4',
+            'q3': 'videos/zh/q3_throughput.mp4',
+            'q4': 'videos/zh/q4_agv_tasks.mp4',
+            'q5': 'videos/zh/q5_agv_traffic.mp4',
+            'q6': 'videos/zh/q6_accuracy.mp4',
+            'q7': 'videos/zh/q7_failure.mp4',
+            'q8': 'videos/zh/q8_data_optimization.mp4',
+            'q9': 'videos/zh/q9_benefits.mp4',
+            'q10': 'videos/zh/q10_future.mp4',
+            
+            // 英文视频路径
+            'part1_en': 'videos/en/part1_basic_info.mp4',
+            'part2_en': 'videos/en/part2_equipment.mp4',
+            'part3_en': 'videos/en/part3_storage.mp4',
+            'part4_en': 'videos/en/part4_efficiency.mp4',
+            'part5_en': 'videos/en/part5_agv.mp4',
+            'part6_en': 'videos/en/part6_data.mp4',
+            'q1_en': 'videos/en/q1_why_automated.mp4',
+            'q2_en': 'videos/en/q2_utilization.mp4',
+            'q3_en': 'videos/en/q3_throughput.mp4',
+            'q4_en': 'videos/en/q4_agv_tasks.mp4',
+            'q5_en': 'videos/en/q5_agv_traffic.mp4',
+            'q6_en': 'videos/en/q6_accuracy.mp4',
+            'q7_en': 'videos/en/q7_failure.mp4',
+            'q8_en': 'videos/en/q8_data_optimization.mp4',
+            'q9_en': 'videos/en/q9_benefits.mp4',
+            'q10_en': 'videos/en/q10_future.mp4'
+        };
+
         // 选择语言
-        function selectLang(lang) {
-            document.getElementById('langSelect').style.display = 'none';
+        function selectLanguage(lang) {
+            document.getElementById('languageSelector').style.display = 'none';
             
             if (lang === 'zh') {
-                document.getElementById('zhPage').classList.add('active');
-                document.title = '自动化立体仓库参观介绍';
+                document.getElementById('zhContent').style.display = 'block';
+                document.getElementById('enContent').style.display = 'none';
+                document.title = '自动立体仓库介绍';
             } else {
-                document.getElementById('enPage').classList.add('active');
+                document.getElementById('enContent').style.display = 'block';
+                document.getElementById('zhContent').style.display = 'none';
                 document.title = 'Automated Warehouse Tour';
             }
             
-            window.scrollTo(0, 0);
+            // 添加历史记录，支持浏览器返回按钮
+            history.pushState({lang: lang}, '', `?lang=${lang}`);
         }
-        
-        // 返回语言选择
-        function goBack() {
-            document.getElementById('zhPage').classList.remove('active');
-            document.getElementById('enPage').classList.remove('active');
-            document.getElementById('langSelect').style.display = 'flex';
-            document.title = '自动化立体仓库参观介绍 | Automated Warehouse Tour';
-            
-            // 关闭所有FAQ
-            document.querySelectorAll('.faq-answer').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.querySelectorAll('.faq-question').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.querySelectorAll('.faq-toggle').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            window.scrollTo(0, 0);
-        }
-        
-        // 切换FAQ
-        function toggleFaq(element) {
-            const answer = element.nextElementSibling;
-            const toggle = element.querySelector('.faq-toggle');
-            const isActive = answer.classList.contains('active');
-            
-            // 关闭所有其他FAQ（手风琴效果）
-            document.querySelectorAll('.faq-answer').forEach(el => {
-                if (el !== answer) el.classList.remove('active');
-            });
-            document.querySelectorAll('.faq-question').forEach(el => {
-                if (el !== element) el.classList.remove('active');
-            });
-            document.querySelectorAll('.faq-toggle').forEach(el => {
-                if (el !== toggle) el.classList.remove('active');
-            });
-            
-            // 切换当前
-            if (!isActive) {
-                answer.classList.add('active');
-                element.classList.add('active');
-                toggle.classList.add('active');
-            } else {
-                answer.classList.remove('active');
-                element.classList.remove('active');
-                toggle.classList.remove('active');
-            }
-        }
-    </script>
 
+        // 返回语言选择
+        function backToLanguage() {
+            document.getElementById('languageSelector').style.display = 'flex';
+            document.getElementById('zhContent').style.display = 'none';
+            document.getElementById('enContent').style.display = 'none';
+            document.title = '自动立体仓库介绍 | Automated Warehouse Tour';
+            history.pushState({}, '', window.location.pathname);
+        }
+
+        // 打开视频
+        function openVideo(videoId) {
+            const modal = document.getElementById('videoModal');
+            const content = document.getElementById('videoContent');
+            const videoPath = videoPaths[videoId];
+            
+            // 检查是否是GitHub Pages链接，如果是，可能需要转换为raw链接
+            // GitHub 视频存储建议使用 Git LFS 或直接上传到 GitHub Releases
+            
+            content.innerHTML = `
+                <div class="video-placeholder">
+                    <div class="video-placeholder-icon">🎬</div>
+                    <div class="video-placeholder-text">视频加载中...</div>
+                    <div class="video-path">${videoPath}</div>
+                    <video controls autoplay style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none;" 
+                           onloadeddata="this.style.display='block'; this.previousElementSibling.style.display='none';"
+                           onerror="this.style.display='none'; this.previousElementSibling.style.display='flex'; this.previousElementSibling.innerHTML='<div class=\\'video-placeholder-icon\\'>⚠️</div><div class=\\'video-placeholder-text\\'>视频加载失败，请检查路径</div>';">
+                        <source src="${videoPath}" type="video/mp4">
+                        您的浏览器不支持视频播放
+                    </video>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭视频
+        function closeVideo(event) {
+            if (event && event.target !== event.currentTarget) return;
+            
+            const modal = document.getElementById('videoModal');
+            const content = document.getElementById('videoContent');
+            
+            modal.style.display = 'none';
+            content.innerHTML = ''; // 停止视频播放
+            document.body.style.overflow = 'auto';
+        }
+
+        // 处理浏览器返回按钮
+        window.onpopstate = function(event) {
+            if (event.state && event.state.lang) {
+                selectLanguage(event.state.lang);
+            } else {
+                backToLanguage();
+            }
+        };
+
+        // 页面加载时检查URL参数
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const lang = params.get('lang');
+            if (lang === 'zh' || lang === 'en') {
+                selectLanguage(lang);
+            }
+        };
+
+        // 键盘事件支持
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideo();
+            }
+        });
+    </script>
 </body>
 </html>

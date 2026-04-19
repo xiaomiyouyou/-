@@ -1,61 +1,504 @@
-Automated Warehouse Tour Introduction		
-						
-						
-						
-Part 1｜自动立体仓库基本信息		
-						
-Part 1 Basic Information of the Automated Shuttle Warehouse	
-						
-Part 2｜自动化设备系统			
-						
-Part 2 Automated Equipment System			
-						
-Part 3｜仓储能力				
-						
-Part 3 Storage Capability					
-						
-						
-Part 4｜运行效率				
-						
-Part 4 System Throughput & Efficiency			
-						
-						
-						
-Part 5｜AGV 自动运输系统		
-						
-Part 5 AGV Automated Transportation System			
-Part 6｜智能数据与物流可视化管理	
-						
-Part 6 Smart Data & Logistics Visibility
- 
-Part 7常见问题
-Q1：为什么选择建设自动立体库？
-Q1：Why choose to build an Automated Shuttle Warehouse
-Q2：立体库的存储利用率是多少？
-Q2：What is the storage utilization rate of an Automated Shuttle Warehouse?
-Q3.立体库每小时可以处理多少托盘？
-Q3. How many pallets can an Automated Shuttle Warehouse process per hour?
-Q4：AGV 在工厂内部主要承担哪些任务？
-Q4： What are the main tasks that AGVs perform inside factories
-Q5：AGV 如何避免交通冲突或拥堵？
-Q5：How do AGVs avoid traffic conflicts or congestion? 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能仓储视频中心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .step {
+            display: none;
+        }
+        
+        .step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .option-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .option-btn {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 16px;
+            color: #495057;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .option-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .option-btn .title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .option-btn .subtitle-text {
+            font-size: 13px;
+            opacity: 0.8;
+            color: #6c757d;
+        }
+        
+        .option-btn:hover .subtitle-text {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .breadcrumb {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 20px;
+            font-size: 14px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .video-container {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 15px;
+        }
+        
+        video {
+            width: 100%;
+            display: block;
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="container">
+        <!-- 步骤1：选择语言 -->
+        <div id="step1" class="step active">
+            <h1>🌐 请选择语言</h1>
+            <p class="subtitle">Select Your Language / 选择您的语言</p>
+            <div class="option-grid">
+                <button class="option-btn" onclick="selectLang('zh', '中文')">
+                    <span class="title">🇨🇳 中文</span>
+                    <span class="subtitle-text">Chinese</span>
+                </button>
+                <button class="option-btn" onclick="selectLang('en', 'English')">
+                    <span class="title">🇺🇸 English</span>
+                    <span class="subtitle-text">英文</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 步骤2：选择视频 -->
+        <div id="step2" class="step">
+            <div class="breadcrumb" id="breadcrumb2"></div>
+            <h1>📁 请选择视频</h1>
+            <div class="option-grid" id="videoGrid"></div>
+            <button class="back-btn" onclick="goBack(1)">← 返回语言选择</button>
+        </div>
+        
+        <!-- 步骤3：播放视频 -->
+        <div id="step3" class="step">
+            <div class="breadcrumb" id="breadcrumb3"></div>
+            <h1 id="videoTitle">▶️ 视频播放</h1>
+            <div class="video-container">
+                <video id="videoPlayer" controls autoplay>
+                    <source id="videoSource" src="" type="video/mp4">
+                    您的浏览器不支持视频播放
+                </video>
+            </div>
+            <button class="back-btn" onclick="goBack(2)">← 返回视频选择</button>
+        </div>
+    </div>
 
-Q6：系统如何确保库存数据的准确性？
-Q6：How does the system ensure inventory data accuracy?
+    <script>
+        // 配置：视频数据结构
+        // ⚠️ 重要：请将 baseUrl 替换为你的腾讯云 COS 存储桶实际地址
+        const config = {
+            baseUrl: 'https://你的存储桶名称.cos.ap-你的地域.myqcloud.com/',
+            
+            zh: {
+                name: '中文',
+                videos: [
+                    {
+                        id: 'intro',
+                        title: '自动立体仓库参观导览',
+                        subtitle: 'Automated Warehouse Tour Introduction',
+                        file: 'Part 1自动立体仓库基本信息.mp4'
+                    },
+                    {
+                        id: 'p1',
+                        title: 'Part 1｜自动立体仓库基本信息',
+                        subtitle: 'Part 1 Basic Information of the Automated Shuttle Warehouse',
+                        file: 'Part 1自动立体仓库基本信息.mp4'
+                    },
+                    {
+                        id: 'p2',
+                        title: 'Part 2｜自动化设备系统',
+                        subtitle: 'Part 2 Automated Equipment System',
+                        file: 'Part 2 | 自动化设备系统.mp4'
+                    },
+                    {
+                        id: 'p3',
+                        title: 'Part 3｜仓储能力',
+                        subtitle: 'Part 3 Storage Capability',
+                        file: 'Part 3 仓储能力.mp4'
+                    },
+                    {
+                        id: 'p4',
+                        title: 'Part 4｜运行效率',
+                        subtitle: 'Part 4 System Throughput & Efficiency',
+                        file: 'Part 4 运行效率.mp4'
+                    },
+                    {
+                        id: 'p5',
+                        title: 'Part 5｜AGV 自动运输系统',
+                        subtitle: 'Part 5 AGV Automated Transportation System',
+                        file: 'Part 5 AGV 自动运输系统.mp4'
+                    },
+                    {
+                        id: 'p6',
+                        title: 'Part 6｜智能数据与物流可视化管理',
+                        subtitle: 'Part 6 Smart Data & Logistics Visibility',
+                        file: 'Part 6智能数据与物流可视化管理.mp4'
+                    },
+                    {
+                        id: 'p7',
+                        title: 'Part 7｜常见问题',
+                        subtitle: 'Part 7 Frequently Asked Questions',
+                        file: 'Q1.中文.mp4'
+                    },
+                    {
+                        id: 'q1',
+                        title: 'Q1：为什么选择建设自动立体库？',
+                        subtitle: 'Q1：Why choose to build an Automated Shuttle Warehouse',
+                        file: 'Q1.中文.mp4'
+                    },
+                    {
+                        id: 'q2',
+                        title: 'Q2：立体库的存储利用率是多少？',
+                        subtitle: 'Q2：What is the storage utilization rate of an Automated Shuttle Warehouse?',
+                        file: 'Q2中文.mp4'
+                    },
+                    {
+                        id: 'q3',
+                        title: 'Q3：立体库每小时可以处理多少托盘？',
+                        subtitle: 'Q3：How many pallets can an Automated Shuttle Warehouse process per hour?',
+                        file: 'Q3中文.mp4'
+                    },
+                    {
+                        id: 'q4',
+                        title: 'Q4：AGV 在工厂内部主要承担哪些任务？',
+                        subtitle: 'Q4：What are the main tasks that AGVs perform inside factories',
+                        file: 'Q4中文.mp4'
+                    },
+                    {
+                        id: 'q5',
+                        title: 'Q5：AGV 如何避免交通冲突或拥堵？',
+                        subtitle: 'Q5：How do AGVs avoid traffic conflicts or congestion?',
+                        file: 'Q5中文.mp4'
+                    },
+                    {
+                        id: 'q6',
+                        title: 'Q6：系统如何确保库存数据的准确性？',
+                        subtitle: 'Q6：How does the system ensure inventory data accuracy?',
+                        file: 'Q6中文.mp4'
+                    },
+                    {
+                        id: 'q7',
+                        title: 'Q7：如果系统设备出现故障，会影响生产吗？',
+                        subtitle: 'Q7：Will production be affected if system equipment fails?',
+                        file: 'Q7中文.mp4'
+                    },
+                    {
+                        id: 'q8',
+                        title: 'Q8：你们如何利用数据来优化物流系统？',
+                        subtitle: 'Q8：How do you leverage data to optimize the logistics system?',
+                        file: 'Q8中文.mp4'
+                    },
+                    {
+                        id: 'q9',
+                        title: 'Q9：自动化系统带来了哪些主要收益？',
+                        subtitle: 'Q9：What are the main benefits brought by automation systems?',
+                        file: 'Q9中文.mp4'
+                    },
+                    {
+                        id: 'q10',
+                        title: 'Q10：未来是否有进一步升级或扩展计划？',
+                        subtitle: 'Q10：Are there any plans for future upgrades or expansion?',
+                        file: 'Q10中文.mp4'
+                    }
+                ]
+            },
+            
+            en: {
+                name: 'English',
+                videos: [
+                    {
+                        id: 'intro',
+                        title: 'Automated Warehouse Tour Introduction',
+                        subtitle: '自动立体仓库参观导览',
+                        file: 'part 1 Basic Information of the Automated Shuttle Warehouse.mp4'
+                    },
+                    {
+                        id: 'p1',
+                        title: 'Part 1｜Basic Information of the Automated Shuttle Warehouse',
+                        subtitle: 'Part 1｜自动立体仓库基本信息',
+                        file: 'part 1 Basic Information of the Automated Shuttle Warehouse.mp4'
+                    },
+                    {
+                        id: 'p2',
+                        title: 'Part 2｜Automated Equipment System',
+                        subtitle: 'Part 2｜自动化设备系统',
+                        file: 'part 2 Automated Equipment System.mp4'
+                    },
+                    {
+                        id: 'p3',
+                        title: 'Part 3｜Storage Capability',
+                        subtitle: 'Part 3｜仓储能力',
+                        file: 'part 3 Storage Capability.mp4'
+                    },
+                    {
+                        id: 'p4',
+                        title: 'Part 4｜System Throughput & Efficiency',
+                        subtitle: 'Part 4｜运行效率',
+                        file: 'part 4 System Throughput & Efficiency.mp4'
+                    },
+                    {
+                        id: 'p5',
+                        title: 'Part 5｜AGV Automated Transportation System',
+                        subtitle: 'Part 5｜AGV 自动运输系统',
+                        file: 'part 5 AGV Automated Transportation System.mp4'
+                    },
+                    {
+                        id: 'p6',
+                        title: 'Part 6｜Smart Data & Logistics Visibility',
+                        subtitle: 'Part 6｜智能数据与物流可视化管理',
+                        file: 'part 6 Smart Data & Logistics Visibility.mp4'
+                    },
+                    {
+                        id: 'p7',
+                        title: 'Part 7｜Frequently Asked Questions',
+                        subtitle: 'Part 7｜常见问题',
+                        file: 'Q1 english.mp4'
+                    },
+                    {
+                        id: 'q1',
+                        title: 'Q1：Why choose to build an Automated Shuttle Warehouse',
+                        subtitle: 'Q1：为什么选择建设自动立体库？',
+                        file: 'Q1 english.mp4'
+                    },
+                    {
+                        id: 'q2',
+                        title: 'Q2：What is the storage utilization rate of an Automated Shuttle Warehouse?',
+                        subtitle: 'Q2：立体库的存储利用率是多少？',
+                        file: 'Q2english.mp4'
+                    },
+                    {
+                        id: 'q3',
+                        title: 'Q3：How many pallets can an Automated Shuttle Warehouse process per hour?',
+                        subtitle: 'Q3：立体库每小时可以处理多少托盘？',
+                        file: 'Q3english.mp4'
+                    },
+                    {
+                        id: 'q4',
+                        title: 'Q4：What are the main tasks that AGVs perform inside factories',
+                        subtitle: 'Q4：AGV 在工厂内部主要承担哪些任务？',
+                        file: 'Q4 english.mp4'
+                    },
+                    {
+                        id: 'q5',
+                        title: 'Q5：How do AGVs avoid traffic conflicts or congestion?',
+                        subtitle: 'Q5：AGV 如何避免交通冲突或拥堵？',
+                        file: 'Q5 english.mp4'
+                    },
+                    {
+                        id: 'q6',
+                        title: 'Q6：How does the system ensure inventory data accuracy?',
+                        subtitle: 'Q6：系统如何确保库存数据的准确性？',
+                        file: 'Q6 english.mp4'
+                    },
+                    {
+                        id: 'q7',
+                        title: 'Q7：Will production be affected if system equipment fails?',
+                        subtitle: 'Q7：如果系统设备出现故障，会影响生产吗？',
+                        file: 'Q7english.mp4'
+                    },
+                    {
+                        id: 'q8',
+                        title: 'Q8：How do you leverage data to optimize the logistics system?',
+                        subtitle: 'Q8：你们如何利用数据来优化物流系统？',
+                        file: 'Q8 english.mp4'
+                    },
+                    {
+                        id: 'q9',
+                        title: 'Q9：What are the main benefits brought by automation systems?',
+                        subtitle: 'Q9：自动化系统带来了哪些主要收益？',
+                        file: 'Q9english.mp4'
+                    },
+                    {
+                        id: 'q10',
+                        title: 'Q10：Are there any plans for future upgrades or expansion?',
+                        subtitle: 'Q10：未来是否有进一步升级或扩展计划？',
+                        file: 'Q10english.mp4'
+                    }
+                ]
+            }
+        };
 
-Q7：如果系统设备出现故障，会影响生产吗？
-Q7： Will production be affected if system equipment fails?
+        let currentLang = '';
+        let currentLangName = '';
 
-Q8：你们如何利用数据来优化物流系统？
-Q8：How do you leverage data to optimize the logistics system?
+        // 选择语言
+        function selectLang(lang, name) {
+            currentLang = lang;
+            currentLangName = name;
+            
+            // 生成视频选择按钮
+            const videoGrid = document.getElementById('videoGrid');
+            videoGrid.innerHTML = '';
+            
+            config[lang].videos.forEach(video => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <span class="title">${video.title}</span>
+                    <span class="subtitle-text">${video.subtitle}</span>
+                `;
+                btn.onclick = () => playVideo(video);
+                videoGrid.appendChild(btn);
+            });
+            
+            document.getElementById('breadcrumb2').textContent = `当前语言：${name}`;
+            showStep(2);
+        }
 
-Q9：自动化系统带来了哪些主要收益？
-Q9：What are the main benefits brought by automation systems?
-Q10：未来是否有进一步升级或扩展计划？
-Q10：Are there any plans for future upgrades or expansion?
+        // 播放视频
+        function playVideo(video) {
+            // 拼接完整 URL
+            const videoUrl = config.baseUrl + encodeURIComponent(video.file);
+            
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoSource = document.getElementById('videoSource');
+            
+            videoSource.src = videoUrl;
+            videoPlayer.load();
+            
+            // 更新标题
+            document.getElementById('videoTitle').textContent = `▶️ ${video.title}`;
+            document.getElementById('breadcrumb3').textContent = 
+                `${currentLangName} > ${video.title}`;
+            showStep(3);
+        }
 
-			
-						
-						
-						
+        // 切换步骤
+        function showStep(stepNum) {
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.getElementById(`step${stepNum}`).classList.add('active');
+        }
 
+        // 返回上一步
+        function goBack(targetStep) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.pause();
+            showStep(targetStep);
+        }
+
+        // 页面加载时检查 URL 参数（支持直接链接到特定视频）
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const lang = params.get('lang');
+            const videoId = params.get('video');
+            
+            if (lang && videoId && config[lang]) {
+                const video = config[lang].videos.find(v => v.id === videoId);
+                if (video) {
+                    selectLang(lang, config[lang].name);
+                    setTimeout(() => playVideo(video), 100);
+                }
+            }
+        };
+    </script>
+</body>
+</html>
